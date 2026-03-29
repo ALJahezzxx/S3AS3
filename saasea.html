@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سعاسع</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --red: #ff1a1a;
+    --blue: #1a1aff;
+    --green: #00ff00;
+    --pink: #ff00cc;
+    --gold: #c8a96e;
+    --text-shadow: 2px 2px 0px #8b6914, 4px 4px 0px #5a4209;
+  }
+
+  body {
+    font-family: 'Amiri', serif;
+    background: var(--red);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Video background */
+  .video-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  /* Green bar on the right */
+  .green-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8vw;
+    height: 100vh;
+    background: var(--green);
+    z-index: 0;
+  }
+
+  /* Settings button */
+  .settings-btn {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-family: 'Amiri', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0,0,255,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .settings-btn:hover {
+    transform: scale(1.07);
+    box-shadow: 0 6px 20px rgba(0,0,255,0.6);
+  }
+  .settings-btn:active { transform: scale(0.96); }
+
+  /* Main content */
+  .main {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px 10vw 20px 20px;
+    gap: 40px;
+  }
+
+  /* Title */
+  .title {
+    font-size: clamp(4rem, 14vw, 10rem);
+    color: var(--gold);
+    text-shadow: var(--text-shadow);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    animation: titlePulse 3s ease-in-out infinite;
+    text-align: center;
+  }
+  @keyframes titlePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  /* Buttons container */
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  /* Main game buttons */
+  .game-btn {
+    background: var(--blue);
+    color: var(--gold);
+    border: none;
+    border-radius: 8px;
+    width: 75%;
+    padding: clamp(18px, 3vw, 28px) 40px;
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 700;
+    cursor: pointer;
+    text-shadow: var(--text-shadow);
+    box-shadow: 0 6px 0px #0000aa, 0 10px 25px rgba(0,0,200,0.35);
+    transition: transform 0.12s, box-shadow 0.12s;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.08em;
+  }
+  .game-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: rgba(255,255,255,0.12);
+    transform: skewX(-20deg);
+    transition: left 0.4s ease;
+  }
+  .game-btn:hover::after { left: 150%; }
+  .game-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 0px #0000aa, 0 14px 30px rgba(0,0,200,0.5);
+  }
+  .game-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0px #0000aa, 0 4px 10px rgba(0,0,200,0.3);
+  }
+
+  /* Social bar */
+  .social-bar {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--pink);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    max-width: 90vw;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(255,0,200,0.5);
+  }
+
+  .social-link {
+    background: var(--blue);
+    color: white;
+    border-radius: 10px;
+    padding: 7px 14px;
+    font-size: clamp(0.7rem, 2vw, 0.9rem);
+    font-weight: 700;
+    text-decoration: none;
+    font-family: 'Amiri', serif;
+    transition: transform 0.15s, background 0.15s;
+    white-space: nowrap;
+  }
+  .social-link:hover {
+    transform: scale(1.1);
+    background: #3333ff;
+  }
+
+  /* Settings modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--blue);
+    border-radius: 16px;
+    padding: 36px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(0,0,255,0.6);
+    animation: popIn 0.25s ease;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal h2 {
+    color: var(--gold);
+    font-size: 2rem;
+    text-shadow: var(--text-shadow);
+    margin-bottom: 20px;
+  }
+  .modal p {
+    color: white;
+    font-size: 1.1rem;
+    margin-bottom: 24px;
+    opacity: 0.9;
+  }
+  .modal-close {
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .modal-close:hover { transform: scale(1.05); }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .green-bar { width: 6vw; }
+    .main { padding: 20px 8vw 100px 16px; gap: 30px; }
+    .game-btn { width: 90%; }
+    .social-bar { bottom: 10px; right: 10px; padding: 10px 12px; gap: 7px; }
+  }
+</style>
+</head>
+<body>
+
+<video class="video-bg" autoplay muted loop playsinline>
+  <source src="https://raw.githubusercontent.com/s3eedxx/s3eedxx.github.io/main/Background.mp4" type="video/mp4">
+  <source src="https://raw.githubusercontent.com/s3eedxx/s3eedxx.github.io/main/Background.webm" type="video/webm">
+</video>
+
+<div class="green-bar"></div>
+
+<button class="settings-btn" onclick="openModal()">الاعداد</button>
+
+<main class="main">
+  <h1 class="title">سعاسع</h1>
+
+  <div class="buttons">
+    <button class="game-btn" onclick="startGame()">اللعب</button>
+    <button class="game-btn" onclick="openDevs()">المطورين</button>
+  </div>
+</main>
+
+<!-- Social links bar -->
+<div class="social-bar">
+  <a href="https://twitch.tv/s3eedxx" target="_blank" class="social-link">Twitch</a>
+  <a href="https://modrinth.com/modpack/s3exp" target="_blank" class="social-link">Modrith</a>
+  <a href="https://youtube.com/@s3eed?si=eMDMgmAiJVW8Q4nG" target="_blank" class="social-link">YouTube</a>
+  <a href="https://discord.gg/ybhPx5ekkg" target="_blank" class="social-link">Discord.gg</a>
+  <a href="https://www.tiktok.com/@is3eedxx?_r=1&_t=ZS-9564zM7YNSH" target="_blank" class="social-link">tiktok</a>
+  <a href="https://www.instagram.com/is3eedxx?igsh=MWg5ZWR1Zm9sMHA4dw==" target="_blank" class="social-link">Instagram</a>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <h2>الإعدادات</h2>
+    <p>لا توجد إعدادات متاحة حالياً</p>
+    <button class="modal-close" onclick="closeModal()">إغلاق</button>
+  </div>
+</div>
+
+<script>
+  function openModal() {
+    document.getElementById('settingsModal').classList.add('active');
+  }
+  function closeModal() {
+    document.getElementById('settingsModal').classList.remove('active');
+  }
+  document.getElementById('settingsModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  function startGame() {
+    // Placeholder - connect to your game logic
+    alert('جاري تحميل اللعبة...');
+  }
+  function openDevs() {
+    alert('المطورون: سعاسع Team');
+  }
+</script>
+</body>
+</html>
